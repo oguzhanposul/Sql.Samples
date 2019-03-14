@@ -1,0 +1,97 @@
+CREATE FUNCTION dbo.tcnokontrolstring(@tcno VARCHAR(20))
+RETURNS VARCHAR(20)
+AS
+BEGIN
+	DECLARE @yedektc2 BIGINT
+	DECLARE @yedektc BIGINT
+	DECLARE @sayi1 TINYINT
+	DECLARE @sayi2 TINYINT
+	DECLARE @sayi3 TINYINT
+	DECLARE @sayi4 TINYINT
+	DECLARE @sayi5 TINYINT
+	DECLARE @sayi6 TINYINT
+	DECLARE @sayi7 TINYINT
+	DECLARE @sayi8 TINYINT
+	DECLARE @sayi9 TINYINT
+	DECLARE @sayi10 TINYINT
+	DECLARE @sayi11 TINYINT
+	DECLARE @TEKTOPLAM BIGINT
+	DECLARE @CIFTTOPLAM BIGINT
+	DECLARE @TOPLAM BIGINT
+	DECLARE @KONTROL VARCHAR(20)
+
+	
+
+
+	IF LEN(@tcno) = 11
+	BEGIN
+	
+	set @yedektc2=CONVERT(BIGINT,@tcno)
+	set @yedektc = @yedektc2
+		SET @sayi11 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi10 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi9 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi8 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi7 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi6 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi5 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi4 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi3 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi2 = @yedektc%10 SET @yedektc=@yedektc/10
+		SET @sayi1 = @yedektc%10 
+
+		SET @CIFTTOPLAM=@sayi2+@sayi4+@sayi6+@sayi8
+		SET @TEKTOPLAM=@sayi1+@sayi3+@sayi5+@sayi7+@sayi9
+		SET @TOPLAM=@sayi2+@sayi4+@sayi6+@sayi8+@sayi1+@sayi3+@sayi5+@sayi7+@sayi9+@sayi10
+
+		IF (((7*@TEKTOPLAM)-(@CIFTTOPLAM))%10) = @sayi10
+			BEGIN
+				IF(@TOPLAM%10)=@sayi11
+				BEGIN
+					SET @KONTROL  = 'DOGRU'
+				END
+
+				ELSE
+					BEGIN
+						SET @KONTROL='YANLÝS'
+					END
+			END
+		ELSE
+			BEGIN
+			SET @KONTROL='YANLÝS'
+			END
+	END
+
+	ELSE
+	BEGIN
+		SET @KONTROL = 'YANLÝS'
+	END
+
+
+	RETURN @KONTROL
+END
+
+
+--CREATE FUNTIONDAN EN SON 'END' KISMINA KADAR SEÇÝLÝR VE EXECUTE BUTONUNA BASILIR BOYLECE FONKSYÝON OLUÞTURULUR.
+--FONKSÝYONUN ÖRNEK KULLANIMI
+--PARANTEZ ÝÇÝNE TCKÝMLÝK NO YAZILIR VE FONKSÝYON BU TCNÝN DOGRU VEYA YANLIS OLDUGUNA KARAR VERÝR.
+--FONKSÝYON PARANTEZ ÝÇÝNE BÝR SAYI BEKLEMEKTEDÝR.
+
+select dbo.tcnokontrol(21778935157) as SONUC
+select dbo.tcnokontrol(12345678901) as SONUC
+
+
+--KOMPLE BÝR SÜTUNDAKÝ TC'LERÝ KONTROL ETMEK ÝÇÝN FONKSYÝON AÞAÐIDAKÝ GÝBÝ KULLANILMALIDIR
+
+select dbo.tcnokontrol(1) AS SONUC FROM  2
+-- 1 YERÝNE KOLON ÝSMÝ
+--2 YERÝNE TABLONUN ÝSMÝ YAZILMALIDIR.
+
+:ÖRNEK:
+select dbo.tcnokontrol(TCKÝMLÝKNO) AS SONUC FROM OGUZHAN
+
+
+
+
+
+

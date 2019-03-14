@@ -1,0 +1,58 @@
+CREATE FUNCTION dbo.telsorgulamastring(@telno VARCHAR(20))
+RETURNS VARCHAR(100)
+AS
+BEGIN
+	DECLARE @ilküchane INT
+	DECLARE @yedektel BIGINT
+	DECLARE @SONUC VARCHAR(100)
+
+
+	set @yedektel=CONVERT(BIGINT,@telno)
+
+
+	IF LEN(@telno) = 10
+		BEGIN
+			SET @ilküchane = (@yedektel/10000000)
+			IF( (@ilküchane=530) OR (@ilküchane=531) OR (@ilküchane=532) OR (@ilküchane=533) OR (@ilküchane=534) OR (@ilküchane=535) OR (@ilküchane=536)   OR (@ilküchane=537) OR (@ilküchane=538) OR (@ilküchane=539) OR (@ilküchane=561) )
+				BEGIN
+					SET @SONUC='GECERLI TELEFON NUMARASI - TURKCELL'
+				END
+			ELSE IF ( (@ilküchane=501) OR (@ilküchane=505) OR (@ilküchane=506) OR (@ilküchane=507) OR (@ilküchane=551) OR (@ilküchane=552) OR (@ilküchane=553)   OR (@ilküchane=554) OR (@ilküchane=555) OR (@ilküchane=559)  )
+				BEGIN
+					SET @SONUC='GECERLI TELEFON NUMARASI - TURK TELEKOM'	
+				END
+			ELSE IF ( (@ilküchane=540) OR (@ilküchane=541) OR (@ilküchane=542) OR (@ilküchane=543) OR (@ilküchane=544) OR (@ilküchane=545) OR (@ilküchane=546)   OR (@ilküchane=547) OR (@ilküchane=548) OR (@ilküchane=549) )
+				BEGIN
+					SET @SONUC='GECERLI TELEFON NUMARASI - VODAFONE'
+				END
+			ELSE
+				SET @SONUC = 'TANIMLANMAMIÞ TELEFON NUMARASI'
+				
+		END
+
+	ELSE
+		BEGIN
+			SET @SONUC='TELEFON NUMARASI BASINDA 0 OLMADAN 10 HANELI OLMAK ZORUNDADIR.'
+		END
+
+RETURN @SONUC 
+
+END
+
+
+--CREATE FUNCTION KISMINDAN EN SON 'END' E KADAR SEÇÝLÝP EXECUTE EDÝLECEK DAHA SONRA AÞAGIDAKI GÝBÝ KULLANILABÝLÝR.
+--FONKSÝYON PARAMETRE OLARAK 10 HANELÝ BÝR SAYI BEKLEMEKTEDÝR.
+--ÖRNEK KULLANIMI AÞAÐIDAKÝ GÝBÝDÝR.
+select dbo.telsorgulama(532) AS SONUC
+select dbo.telsorgulama(5433932528) AS SONUC
+select dbo.telsorgulama(12345678910) AS SONUC
+
+
+--EÐER TÜM KOLONDAKÝ TELEFON NUMARALARINI KONTROL ETMEK ÝSTÝYOSAK KULLANIMI AÞAÐIDAKÝ GÝBÝ OLMALIDIR.
+select dbo.telsorgulama(1) as SONUC FROM 2
+1=KOLON ÝSMÝ
+2=TABLO ÝSMÝ
+
+:ÖRNEK:
+select dbo.telsorgulama(TELEFON) AS SONUC FROM OGUZHAN
+
